@@ -359,14 +359,14 @@ def csvwrite(x, y, ok, ng):
     csvfile.close()
 
 
-def csvread():
-    table = []
-    elo = open(r'D:\STUDIA\Inżynierka\csvfile\test.csv')
-    plots = csv.reader(elo, delimiter=';')
-    for row in plots:
-        table.append((row[1]))
-    elo.close()
-    return table
+# def csvread():
+#     table = []
+#     elo = open(r'D:\STUDIA\Inżynierka\csvfile\test.csv')
+#     plots = csv.reader(elo, delimiter=';')
+#     for row in plots:
+#         table.append((row[1]))
+#     elo.close()
+#     return table
 
 
 if __name__ == '__main__':
@@ -381,7 +381,7 @@ if __name__ == '__main__':
                 beck = licznik.set_value(File_Change1())
                 file_to_analizes()
                 csvwrite(Stan_Koncowy_Ostrza()[0],counter_cykli(),wsk_OK(),wsk_NG())
-                print(csvread())
+                print(OK)
                 # print(Analiza_Stref_I())
                 # print(Analiza_Stref_II())
                 # print(Analiza_Stref_III())
