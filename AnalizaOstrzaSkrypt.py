@@ -2,7 +2,7 @@
 import csv
 import os #os module imported here
 
-moveto = r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
+moveto = r'/home/pi/Inzynierka/Dash_App/dash_web/csv_memory//'
 cycle = 0
 NG = 0
 OK = 0
@@ -16,7 +16,6 @@ class Watcher:
 
     def set_value(self, new_value):
         if self.variable != new_value:
-            # self.pre_change()
             self.variable = new_value
             self.post_change()
         return self.liczZ
@@ -57,7 +56,7 @@ def file_to_analizes():
 
 def File_Change1():
     global x1
-    folder = r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
+    folder = r'/home/pi/Inzynierka/Dash_App/dash_web/csv_memory//'
     try:
         x1 = len([os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.csv')])
         return x1
@@ -309,31 +308,33 @@ def counter_cykli():
     cycle+=1
     return cycle
 
-def Stan_Koncowy_Ostrza():
-    global NG
-    global OK
+def wsk_suma():
     p1 = Analiza_Stref_I()
     p2 = Analiza_Stref_II()
     p3 = Analiza_Stref_III()
     p4 = Analiza_Stref_IV()
     suma = p1 + p2 + p3 + p4
+    return suma
+
+
+def Stan_Koncowy_Ostrza():
+    global NG
+    global OK
+    suma=wsk_suma()
     if suma > 10:
-        stan = 'bardzo dobry'
-        przezbrojenie = False
+        stan = 0
         OK += 1
     elif suma > 8:
-        stan = 'dobry'
-        przezbrojenie = False
+        stan = 0
         OK += 1
     elif suma > 6:
-        stan = 'wymaga przezbrojenia'
-        przezbrojenie = True
+        stan = 1
         NG += 1
     else:
-        stan = 'Awaria!!!'
-        przezbrojenie = True
+        stan = 1
         NG += 1
-    return stan,przezbrojenie
+    return stan
+
 
 
 def wsk_OK():
@@ -348,14 +349,19 @@ def wsk_NG():
     return new
 
 
-def csvwrite(x, y, ok, ng):
-    with open(r'D:\STUDIA\Inżynierka\csvfile\test.csv', 'w',newline='') as csvfile:
+def csvwrite(x, y, ok, ng,stan):
+    with open(r'/home/pi/Inzynierka/Dash_App/skrypt/test.csv', 'w',newline='') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        filewriter.writerow(['Ostrze', x])
-        filewriter.writerow(['NrCyklu', y])
-        filewriter.writerow(['wskOK', ok])
-        filewriter.writerow(['wskNG', ng])
+        # filewriter.writerow(['Ostrze', x])
+        # filewriter.writerow(['NrCyklu', y])
+        # filewriter.writerow(['wskOK', ok])
+        # filewriter.writerow(['wskNG', ng])
+        filewriter.writerow([x])  #OstrośćOstrza
+        filewriter.writerow([y])  #NrCyklu
+        filewriter.writerow([ok]) #wskOK
+        filewriter.writerow([ng]) #wskNG
+        filewriter.writerow([stan])  # stan
     csvfile.close()
 
 
@@ -380,12 +386,10 @@ if __name__ == '__main__':
                 # wykonanie skryptu
                 beck = licznik.set_value(File_Change1())
                 file_to_analizes()
-                csvwrite(Stan_Koncowy_Ostrza()[0],counter_cykli(),wsk_OK(),wsk_NG())
+                csvwrite(Stan_Koncowy_Ostrza(),counter_cykli(),wsk_OK(),wsk_NG(),wsk_suma())
                 print(OK)
-                # print(Analiza_Stref_I())
-                # print(Analiza_Stref_II())
-                # print(Analiza_Stref_III())
-                # print(Analiza_Stref_IV())
+                print(NG)
+                print(cycle)
         except PermissionError:
             print('bład odczytu')
         except TypeError:
