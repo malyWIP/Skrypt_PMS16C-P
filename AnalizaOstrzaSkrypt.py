@@ -1,12 +1,13 @@
 
 import csv
 import os #os module imported here
+import time
 
-moveto = r'/home/pi/Inzynierka/Dash_App/dash_web/csv_memory//'
+moveto =r'/home/pi/Inzynierka/Dash_App/csv_memory/'
 cycle = 0
 NG = 0
 OK = 0
-
+x1=0
 
 class Watcher:
     liczZ = 0
@@ -56,7 +57,7 @@ def file_to_analizes():
 
 def File_Change1():
     global x1
-    folder = r'/home/pi/Inzynierka/Dash_App/dash_web/csv_memory//'
+    folder =r'/home/pi/Inzynierka/Dash_App/csv_memory/'
     try:
         x1 = len([os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.csv')])
         return x1
@@ -350,7 +351,7 @@ def wsk_NG():
 
 
 def csvwrite(x, y, ok, ng,stan):
-    with open(r'/home/pi/Inzynierka/Dash_App/skrypt/test.csv', 'w',newline='') as csvfile:
+    with open(r'C:\TestDirectory\test.csv', 'w',newline='') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         # filewriter.writerow(['Ostrze', x])
@@ -380,6 +381,7 @@ if __name__ == '__main__':
     licznik = Watcher(File_Change1())
     beck=0
     while True:
+        time.sleep(0.1)
         check = licznik.set_value(File_Change1())
         try:
             if check != beck and file_to_analizes() is not None:
@@ -390,6 +392,7 @@ if __name__ == '__main__':
                 print(OK)
                 print(NG)
                 print(cycle)
+
         except PermissionError:
             print('bład odczytu')
         except TypeError:
