@@ -351,7 +351,7 @@ def wsk_NG():
 
 
 def csvwrite(x, y, ok, ng,stan):
-    with open(r'C:\TestDirectory\test.csv', 'w',newline='') as csvfile:
+    with open(r'/home/pi/Inzynierka/Dash_App/skrypt/test.csv', 'w',newline='') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         # filewriter.writerow(['Ostrze', x])
