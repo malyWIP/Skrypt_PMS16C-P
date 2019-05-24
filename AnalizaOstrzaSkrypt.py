@@ -5,7 +5,7 @@ import time
 import shutil
 
 current = r'/home/pi/Inzynierka/Dash_App/csv_memory/'
-store = r'/home/pi/Inzynierka/Dash_App/database/'
+dash = r'/home/pi/Inzynierka/Dash_App/dash_csv/'
 path = r'/home/pi/Inzynierka/Dash_App/csv_memory/'
 moveto = r'/home/pi/Inzynierka/Dash_App/database/'
 cycle = 0
@@ -415,21 +415,30 @@ if __name__ == '__main__':
     process_tester = DataMove(True)
     licznik = Watcher(File_Change1())
     beck=0
+    counter = 0;
     while True:
         check = licznik.set_value(File_Change1())
         z = File_Change1()
         time.sleep(0.1)
         try:
             while check != beck and file_to_analizes() is not None and z > 1:
+
+                counter = counter + 1
+                print(counter)
                 # wykonanie skryptu
                 beck = licznik.set_value(File_Change1())
                 file_to_analizes()
                 csvwrite(Stan_Koncowy_Ostrza(),counter_cykli(),wsk_OK(),wsk_NG(),wsk_suma())
-                while z > 1:
+                if z > 1 and counter < 10:
                     process_tester.setState(True)
                     process_tester.move_to_directory(path, moveto)
                     process_tester.setState(False)
                     z=z-1
+                elif counter >=10:
+                    process_tester.setState(True)
+                    process_tester.move_to_directory(path, dash)
+                    process_tester.setState(False)
+                    counter = 0
                 print('cykle',cycle)
 
         except PermissionError:
