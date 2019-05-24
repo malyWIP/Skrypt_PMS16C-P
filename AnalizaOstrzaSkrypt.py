@@ -2,8 +2,12 @@
 import csv
 import os #os module imported here
 import time
+import shutil
 
-moveto =r'/home/pi/Inzynierka/Dash_App/csv_memory/'
+current = r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
+store = r'D:\STUDIA\Inżynierka\Dash_App\database\\'
+path = r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
+moveto = r'D:\STUDIA\Inżynierka\Dash_App\database\\'
 cycle = 0
 NG = 0
 OK = 0
@@ -26,6 +30,36 @@ class Watcher:
         self.liczZ += 1
         return self.liczZ
 
+class DataMove:
+
+    state = True
+
+    def __init__(self, state):
+        self.state = state
+
+
+    def move_to_directory(self, path, moveto):
+        files = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.csv')]
+        files.sort(key=lambda x: os.path.getmtime(x), reverse=False)
+        k = 0
+        try:
+            if self.state !=False and files.__len__() > k:
+                x = files[k]
+                b = x.split('\\')
+                src = path + b[6]
+                dst = moveto + b[6]
+                shutil.move(src, dst)
+                k += 1
+                time.sleep(0.1)
+
+        except FileNotFoundError:
+            print('blad')
+
+
+
+    def setState(self, newstate):
+        self.state = newstate
+
 
 def get_latest(folder):
     try:
@@ -41,7 +75,7 @@ def get_latest(folder):
 
 def file_to_analizes():
     try:
-        time_sorted_list = get_latest(moveto)
+        time_sorted_list = get_latest(current)
 
         if time_sorted_list is None:
             plots = None
@@ -57,7 +91,7 @@ def file_to_analizes():
 
 def File_Change1():
     global x1
-    folder =r'/home/pi/Inzynierka/Dash_App/csv_memory/'
+    folder =r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
     try:
         x1 = len([os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.csv')])
         return x1
@@ -351,7 +385,7 @@ def wsk_NG():
 
 
 def csvwrite(x, y, ok, ng,stan):
-    with open(r'/home/pi/Inzynierka/Dash_App/skrypt/test.csv', 'w',newline='') as csvfile:
+    with open(r'C:\TestDirectory\test.csv', 'w',newline='') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         # filewriter.writerow(['Ostrze', x])
@@ -378,20 +412,25 @@ def csvwrite(x, y, ok, ng,stan):
 
 if __name__ == '__main__':
     # Listener
+    process_tester = DataMove(True)
     licznik = Watcher(File_Change1())
     beck=0
     while True:
-        time.sleep(0.1)
         check = licznik.set_value(File_Change1())
+        z = File_Change1()
+        time.sleep(0.1)
         try:
-            if check != beck and file_to_analizes() is not None:
+            while check != beck and file_to_analizes() is not None and z > 1:
                 # wykonanie skryptu
                 beck = licznik.set_value(File_Change1())
                 file_to_analizes()
                 csvwrite(Stan_Koncowy_Ostrza(),counter_cykli(),wsk_OK(),wsk_NG(),wsk_suma())
-                print(OK)
-                print(NG)
-                print(cycle)
+                while z > 1:
+                    process_tester.setState(True)
+                    process_tester.move_to_directory(path, moveto)
+                    process_tester.setState(False)
+                    z=z-1
+                print('cykle',cycle)
 
         except PermissionError:
             print('bład odczytu')
