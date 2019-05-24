@@ -4,10 +4,10 @@ import os #os module imported here
 import time
 import shutil
 
-current = r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
-store = r'D:\STUDIA\Inżynierka\Dash_App\database\\'
-path = r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
-moveto = r'D:\STUDIA\Inżynierka\Dash_App\database\\'
+current = r'/home/pi/Inzynierka/Dash_App/csv_memory/'
+store = r'/home/pi/Inzynierka/Dash_App/database/'
+path = r'/home/pi/Inzynierka/Dash_App/csv_memory/'
+moveto = r'/home/pi/Inzynierka/Dash_App/database/'
 cycle = 0
 NG = 0
 OK = 0
@@ -385,7 +385,7 @@ def wsk_NG():
 
 
 def csvwrite(x, y, ok, ng,stan):
-    with open(r'C:\TestDirectory\test.csv', 'w',newline='') as csvfile:
+    with open(r'/home/pi/Inzynierka/Dash_App/skrypt/test.csv', 'w',newline='') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=';',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
         # filewriter.writerow(['Ostrze', x])
