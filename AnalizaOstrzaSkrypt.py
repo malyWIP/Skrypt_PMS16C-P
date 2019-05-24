@@ -91,7 +91,7 @@ def file_to_analizes():
 
 def File_Change1():
     global x1
-    folder =r'D:\STUDIA\Inżynierka\Dash_App\csv_memory\\'
+    folder =r'/home/pi/Inzynierka/Dash_App/csv_memory/'
     try:
         x1 = len([os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.csv')])
         return x1
