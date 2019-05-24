@@ -4,10 +4,10 @@ import os #os module imported here
 import time
 import shutil
 
-current = r'/home/pi/Inzynierka/Dash_App/csv_memory/'
-dash = r'/home/pi/Inzynierka/Dash_App/dash_csv/'
-path = r'/home/pi/Inzynierka/Dash_App/csv_memory/'
-moveto = r'/home/pi/Inzynierka/Dash_App/database/'
+current = r'/home/pi/Inzynierka/Dash_App/csv_memory//'
+dash = r'/home/pi/Inzynierka/Dash_App/dash_csv//'
+path = r'/home/pi/Inzynierka/Dash_App/csv_memory//'
+moveto = r'/home/pi/Inzynierka/Dash_App/database//'
 cycle = 0
 NG = 0
 OK = 0
@@ -45,9 +45,9 @@ class DataMove:
         try:
             if self.state !=False and files.__len__() > k:
                 x = files[k]
-                b = x.split('\\')
-                src = path + b[6]
-                dst = moveto + b[6]
+                b = x.split('//')
+                src = path + b[1]
+                dst = moveto + b[1]
                 shutil.move(src, dst)
                 k += 1
                 time.sleep(0.1)
